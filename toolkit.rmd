@@ -1,0 +1,48 @@
+---
+title: "R Toolkit for 23C"
+author: "Theo Chemel"
+---
+
+## Truth Tables
+
+#### Creating a truth table with 4 variables
+
+```{r}
+options <- rep(list(c(TRUE, FALSE)), 4)
+grid4 <- expand.grid(options)
+truth_table <- data.frame(grid4[,c(4:1)])
+colnames(truth_table) <- c("p", "q", "r", "s")
+truth_table
+```
+
+#### Evaluating boolean expressions
+```{r}
+attach(truth_table)
+truth_table$expected <- !(p & q) | (r | s)
+truth_table$cnf <- (!p | !q | r | s)
+detach(truth_table)
+truth_table
+```
+
+#### Verifying expressions
+``` {r}
+attach(truth_table)
+correct <- identical(expected, cnf); correct
+detach(truth_table)
+```
+
+#### Evaluating expressions using finite fields
+```{r}
+"%+%" <- function(x, y) {
+  (x + y) %% 2
+}
+
+attach(truth_table)
+truth_table$ff_or <- as.logical(p %+% q %+% (p * q))
+detach(truth_table)
+truth_table
+```
+
+## Data Frames
+
+## Plots
